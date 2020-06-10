@@ -1,9 +1,9 @@
 TARGET:=FreeRTOS
 # TODO change to your ARM gcc toolchain path
-TOOLCHAIN_ROOT:=~/gcc-arm-none-eabi
+TOOLCHAIN_ROOT:=C:/Program Files (x86)/GNU Tools Arm Embedded/9 2019-q4-major
 TOOLCHAIN_PATH:=$(TOOLCHAIN_ROOT)/bin
 TOOLCHAIN_PREFIX:=arm-none-eabi
-
+CURDIR := C:\omer\sampleProject_FREERTOS\STM32F4-FreeRTOS
 # Optimization level, can be [0, 1, 2, 3, s].
 OPTLVL:=0
 DBG:=-g
@@ -25,11 +25,23 @@ BIN_DIR = $(CURDIR)/binary
 
 # vpath is used so object files are written to the current directory instead
 # of the same directory as their source files
-vpath %.c $(CURDIR)/Libraries/STM32F4xx_StdPeriph_Driver/src \
-          $(CURDIR)/Libraries/syscall $(CURDIR)/hardware $(FREERTOS) \
-          $(FREERTOS)/portable/MemMang $(FREERTOS)/portable/GCC/ARM_CM4F 
+SOURSE_FL   = $(CURDIR)/Libraries/STM32F4xx_StdPeriph_Driver/src 
+SYSCALL_FL  = $(CURDIR)/Libraries/syscall
+HARDWARE_FL = $(CURDIR)/hardware 
+RTOS_FL     = $(FREERTOS) 
+MEMMANG_FL  = $(FREERTOS)/portable/MemMang 
+ARMCMF_FL   = $(FREERTOS)/portable/GCC/ARM_CM4F 
+
+vpath %.c  $(SOURSE_FL)
+vpath %.c  $(SYSCALL_FL)
+vpath %.c  $(HARDWARE_FL)
+vpath %.c  $(RTOS_FL) 
+vpath %.c  $(MEMMANG_FL)
+vpath %.c  $(ARMCMF_FL)
 
 vpath %.s $(STARTUP)
+
+
 ASRC=startup_stm32f4xx.s
 
 # Project Source Files
@@ -106,12 +118,12 @@ CFLAGS=$(COMMONFLAGS) $(MCUFLAGS) $(INCLUDE) $(CDEFS)
 LDLIBS=-lm -lc -lgcc
 LDFLAGS=$(MCUFLAGS) -u _scanf_float -u _printf_float -fno-exceptions -Wl,--gc-sections,-T$(LINKER_SCRIPT),-Map,$(BIN_DIR)/$(TARGET).map
 
-CC=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gcc
-LD=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gcc
-OBJCOPY=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-objcopy
-AS=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-as
-AR=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-ar
-GDB=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gdb
+CC=arm-none-eabi-gcc
+LD=arm-none-eabi-gcc
+OBJCOPY=arm-none-eabi-objcopy
+AS=arm-none-eabi-as
+AR=arm-none-eabi-ar
+GDB=arm-none-eabi-gdb
 
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 
